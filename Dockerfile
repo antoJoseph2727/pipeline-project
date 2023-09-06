@@ -1,3 +1,4 @@
 FROM httpd:2.4
 COPY . .
-EXPOSE 8000
+EXPOSE 80
+CMD ["httpd-foreground"]
