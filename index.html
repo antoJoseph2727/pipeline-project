@@ -1,72 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Tic-Tac-Toe</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
     <style>
-        /* Add some basic styling for the game board */
-        #board {
-            display: grid;
-            grid-template-columns: repeat(3, 100px);
-            gap: 5px;
-        }
-        .cell {
-            width: 100px;
-            height: 100px;
-            text-align: center;
-            font-size: 24px;
-            cursor: pointer;
-        }
+        /* Add CSS styles for the game board and snake */
+        /* You can style it according to your preference */
     </style>
 </head>
 <body>
-    <h1>Tic-Tac-Toe</h1>
-    <div id="board">
-        <!-- Create the game board cells using div elements -->
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
+    <div class="game-container">
+        <div class="game-board">
+            <!-- This is where the game grid will be displayed -->
+        </div>
     </div>
-    <p id="result"></p>
-
     <script>
-        let currentPlayer = 'X'; // X starts the game
-        let board = ['', '', '', '', '', '', '', '', ''];
-        const winCombos = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],
-            [0, 4, 8], [2, 4, 6]
-        ];
+        // JavaScript code for the game logic
+        const gameBoard = document.querySelector('.game-board');
+        const gridSize = 20;
+        let snake = [{ x: 10, y: 10 }];
+        let food = { x: 5, y: 5 };
+        let direction = 'right';
 
-        function makeMove(cell) {
-            const cellIndex = Array.from(cell.parentElement.children).indexOf(cell);
-            if (board[cellIndex] === '' && !isGameOver()) {
-                cell.textContent = currentPlayer;
-                board[cellIndex] = currentPlayer;
-                if (checkWin()) {
-                    document.getElementById('result').textContent = `${currentPlayer} wins!`;
-                } else if (board.every(cell => cell !== '')) {
-                    document.getElementById('result').textContent = "It's a draw!";
-                } else {
-                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        // Function to create the game board
+        function createGameBoard() {
+            // Create a grid of div elements for the game board
+            // You can style these div elements to represent the grid
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    gameBoard.appendChild(cell);
                 }
             }
         }
 
-        function checkWin() {
-            return winCombos.some(combo => {
-                return combo.every(index => board[index] === currentPlayer);
+        // Function to draw the snake and food on the game board
+        function draw() {
+            // Clear the game board
+            gameBoard.innerHTML = '';
+
+            // Draw the food
+            const foodElement = document.createElement('div');
+            foodElement.classList.add('food');
+            foodElement.style.gridRow = food.y;
+            foodElement.style.gridColumn = food.x;
+            gameBoard.appendChild(foodElement);
+
+            // Draw the snake
+            snake.forEach(segment => {
+                const snakeSegment = document.createElement('div');
+                snakeSegment.classList.add('snake-segment');
+                snakeSegment.style.gridRow = segment.y;
+                snakeSegment.style.gridColumn = segment.x;
+                gameBoard.appendChild(snakeSegment);
             });
         }
 
-        function isGameOver() {
-            return checkWin() || board.every(cell => cell !== '');
+        // Game loop
+        function gameLoop() {
+            // Update game logic here
+
+            // Draw the game
+            draw();
+
+            // Call the game loop recursively
+            requestAnimationFrame(gameLoop);
         }
+
+        // Initialize the game
+        createGameBoard();
+        gameLoop();
     </script>
 </body>
 </html>
